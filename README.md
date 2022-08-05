@@ -14,6 +14,8 @@ where you need to add the network, interface and traffic information based on th
 Used this oids as reference:
 https://oidref.com/1.3.6.1.4.1.318.1.1.1
 
+**Tested on v2c**
+
 I personally suggest to eventually use this extension just for reference. 
 
 ⚠️ This extension was written for a test.
