@@ -1,0 +1,1128 @@
+name: custom:bt.extension.snmp-generic-apc-ups
+version: 1.2.0
+minDynatraceVersion: "1.238"
+author:
+  name: Yanez
+
+vars: 
+ - id: ext.activationtag
+   displayName: Extension activation tag
+   type: pattern
+
+metrics:
+  - key: bt.extension.snmp-generic-apc-ups.snmp.in.pkts.count
+    metadata:
+      displayName: Messages delivered
+      description: Total number of messages delivered from the transport service
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.snmp.silentdrops.count
+    metadata:
+      displayName: Silently dropped PDUs
+      description: Number of silently dropped PDUs due to the large reply size
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.in.bad.versions.count
+    metadata:
+      displayName: Unsupported SNMP version messages
+      description: Total number of messages delivered with an unsupported SNMP version
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.in.bad.community.names.count
+    metadata:
+      displayName: Messages with bad community names
+      description: Number of messages with an unknown SNMP community
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.in.bad.community.uses.count
+    metadata:
+      displayName: Messages not allowed in community
+      description: Number of messages not allowed for the used SNMP community
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.in.nosuchnames.count
+    metadata:
+      displayName: "'noSuchName' errors"
+      description: "Number of PDUs delivered PDUs with 'noSuchName' error"
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.in.bad.values.count
+    metadata:
+      displayName: "'badValue' errors"
+      description: "Number of PDUs delivered with 'badValue' error"
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.sys.uptime
+    metadata:
+      displayName: Time since the last re-start 
+      description: The time (in hundredths of a second) since the network management portion of the system was last re-initialized
+      unit: Unspecified
+  - key: func:bt.extension.snmp-generic-apc-ups.sys.uptime.millis
+    query:
+      metricSelector: '(bt.extension.snmp-generic-apc-ups.sys.uptime) * (10)'
+    metadata:
+      displayName: Time since the last re-start 
+      description: The time (in milliseconds) since the network management portion of the system was last re-initialized
+      unit: MilliSecond
+  - key: bt.extension.snmp-generic-apc-ups.if.lastchange
+    metadata:
+      displayName: Last interface status change
+      description: Value of 'sysUpTime' when the interface entered its current state
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.if.in.errors.count
+    metadata:
+      displayName: Inbound errors
+      description: Number of inbound packets/transmission units with errors
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.if.in.discards.count
+    metadata:
+      displayName: Inbound discards
+      description: Number of inbound packets discarded
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.if.out.errors.count
+    metadata:
+      displayName: Outbound errors
+      description: Number of outbound packets/transmission units with errors
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.if.out.discards.count
+    metadata:
+      displayName: Outbound discards
+      description: Number of outbound packets discarded
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.if.out.octets.count
+    metadata:
+      displayName: Octets transmitted
+      description: The total number of octets transmitted out of the interface including framing characters
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.if.in.octets.count
+    metadata:
+      displayName: Octets received
+      description: The total number of octets received on the interface including framing characters
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.tcp.activeopens.count
+    metadata:
+      displayName: TCP active opens
+      description: Number of transitions of TCP connections from CLOSED to SYN-SENT
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.tcp.passiveopens.count
+    metadata:
+      displayName: TCP passive opens
+      description: Number of transitions of TCP connections from CLOSED to SYN-RCVD
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.tcp.attemptfails.count
+    metadata:
+      displayName: TCP failed attempts
+      description: Number of transitions of TCP connections from SYN-SENT/SYN-RCVD to CLOSED and from SYN-RCVD to LISTEN
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.tcp.estab.resets.count
+    metadata:
+      displayName: TCP resets
+      description: Number of transitions of TCP connections from ESTABLISHED/CLOSE-WAIT to CLOSED
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.tcp.curr.estab
+    metadata:
+      displayName: TCP connections
+      description: Number of TCP connections in the ESTABLISHED/CLOSE-WAIT state
+      unit: Count
+  - key: func:bt.extension.snmp-generic-apc-ups.tcp.hc.total
+    query:
+      metricSelector: '(bt.extension.snmp-generic-apc-ups.tcp.hc.in.segs.count)+(bt.extension.snmp-generic-apc-ups.tcp.hc.out.segs.count)'
+    metadata:
+      displayName: TCP segments sent + received
+      description: Total number of segments sent + received
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.tcp.hc.in.segs.count
+    metadata:
+      displayName: TCP segments received
+      description: Total number of segments received (including errors)
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.tcp.hc.out.segs.count
+    metadata:
+      displayName: TCP segments sent
+      description: Total number of segments sent (excluding retransmissions)
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.tcp.retrans.segs.count
+    metadata:
+      displayName: TCP segments retransmitted
+      description: Total number of segments retransmitted
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.tcp.in.errs.count
+    metadata:
+      displayName: TCP segment errors
+      description: Total number of segments received in error
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.tcp.out.rsts.count
+    metadata:
+      displayName: TCP segment resets
+      description: Number of TCP segments sent containing the RST flag
+      unit: Count
+  - key: func:bt.extension.snmp-generic-apc-ups.udp.hc.total
+    query:
+      metricSelector: '(bt.extension.snmp-generic-apc-ups.udp.hc.in.datagrams.count)+(bt.extension.snmp-generic-apc-ups.udp.hc.out.datagrams.count)'
+    metadata:
+      displayName: UDP datagrams sent + received
+      description: Total number of UDP datagrams sent + received
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.udp.hc.in.datagrams.count
+    metadata:
+      displayName: UDP datagrams delivered
+      description: Total number of UDP datagrams delivered
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.udp.noports.count
+    metadata:
+      displayName: UDP datagrams received without port
+      description: Number of received UDP datagrams (no application at the destination port)
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.udp.in.errors.count
+    metadata:
+      displayName: UDP datagram errors
+      description: Number of received and not delivered UDP datagrams (other than no application at the destination port)
+      unit: Count
+  - key: bt.extension.snmp-generic-apc-ups.udp.hc.out.datagrams.count
+    metadata:
+      displayName: UDP datagrams sent
+      description: Total number of UDP datagrams sent
+      unit: Count
+  - key: func:bt.extension.snmp-generic-apc-ups.totaltraffic
+    query:
+      metricSelector: '(bt.extension.snmp-generic-apc-ups.udp.hc.in.datagrams.count)+(bt.extension.snmp-generic-apc-ups.udp.hc.out.datagrams.count)+(bt.extension.snmp-generic-apc-ups.tcp.hc.in.segs.count)+(bt.extension.snmp-generic-apc-ups.tcp.hc.out.segs.count)'
+    metadata:
+      displayName: Overall traffic TCP & UDP elements
+      description: Total number of TCP segments and UDP datagrams sent + received
+      unit: Count    
+  - key: bt.extension.snmp-generic-apc-ups.if.highspeed
+    metadata:
+      displayName: Interface speed
+      description: Speed of the network interface in MegaBits per second.
+      unit: MegaBitPerSecond
+  - key: func:bt.extension.snmp-generic-apc-ups.if.in.octets.bitpersec
+    query:
+      metricSelector: '((bt.extension.snmp-generic-apc-ups.if.in.octets.count) * (8)):rate(1s)'
+    metadata:
+      displayName: Interface incoming traffic
+      description: Incoming network traffic on interface in bits per second.
+      unit: BitPerSecond
+  - key: func:bt.extension.snmp-generic-apc-ups.if.out.octets.bitpersec
+    query:
+      metricSelector: '((bt.extension.snmp-generic-apc-ups.if.out.octets.count) * (8)):rate(1s)'
+    metadata:
+      displayName: Interface outgoing traffic
+      description: Outgoing network traffic on interface in bits per second.
+      unit: BitPerSecond
+  - key: func:bt.extension.snmp-generic-apc-ups.if.bandwidth
+    query:
+      metricSelector: '((((((bt.extension.snmp-generic-apc-ups.if.in.octets.count) * (8)):rate(1s))+(((bt.extension.snmp-generic-apc-ups.if.out.octets.count) * (8)):rate(1s)))/((bt.extension.snmp-generic-apc-ups.if.highspeed) * 1000000)) * (100))'
+    metadata:
+      displayName: Interface bandwidth utilization
+      description: Bandwidth utilization on interface. Computed as sum of incoming and outgoing traffic divided by interface speed. Presented as percentage.
+      unit: Percent
+  - key: func:bt.extension.snmp-generic-apc-ups.if.in.bandwidth
+    query:
+      metricSelector: '(((((bt.extension.snmp-generic-apc-ups.if.in.octets.count) * (8)):rate(1s))/((bt.extension.snmp-generic-apc-ups.if.highspeed) * (1000000))) * (100))'
+    metadata:
+      displayName: Inbound bandwidth utilization
+      description: Inbound bandwidth utilization on interface. Computed as sum of incoming traffic divided by interface speed. Presented as percentage.
+      unit: Percent
+  - key: func:bt.extension.snmp-generic-apc-ups.if.out.bandwidth
+    query:
+      metricSelector: '(((((bt.extension.snmp-generic-apc-ups.if.out.octets.count) * (8)):rate(1s))/((bt.extension.snmp-generic-apc-ups.if.highspeed) * (1000000))) * (100))'
+    metadata:
+      displayName: Outbound bandwidth utilization
+      description: Outbound bandwidth utilization on interface. Computed as sum of outgoing traffic divided by interface speed. Presented as percentage.
+      unit: Percent
+  - key: bt.extension.snmp-generic-apc-ups.battery.capacity
+    metadata:
+      displayName: UPS Battery Capacity
+      description: The remaining battery capacity expressed in percent of full capacity.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.battery.temperature
+    metadata:
+      displayName: UPS Battery Temperature
+      description: The current internal UPS temperature expressed in Celsius.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.battery.timeremaining
+    metadata:
+      displayName: UPS Battery RunTime Remaining
+      description: The UPS battery run time remaining before battery exhaustion.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.battery.replaceindicator
+    metadata:
+      displayName: UPS Battery Replace Indicator
+      description: Indicates whether the UPS batteries need replacing.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.battery.numextbattpack
+    metadata:
+      displayName: UPS Battery Num Of Batt Packs
+      description: The number of external battery packs connected to the UPS
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.battery.numextbattpackdefective
+    metadata:
+      displayName: UPS Battery Num Of Bad Batt Packs
+      description: The number of external battery packs connected to the UPS that are defective.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.battery.actualVolt
+    metadata:
+      displayName: UPS Battery Actual Voltage
+      description: The actual battery bus voltage in Volts.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.battery.current
+    metadata:
+      displayName: UPS Battery Current
+      description: The battery current in Amps.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.battery.dccurrent
+    metadata:
+      displayName: UPS Battery DC Current
+      description: The total DC current in Amps.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.input.voltage
+    metadata:
+      displayName: UPS Input Line Voltage
+      description: The current utility line voltage in VAC.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.input.max-voltage
+    metadata:
+      displayName: UPS Input Max Line Voltage
+      description: The maximum utility line voltage in VAC over the previous 1 minute period.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.input.min-voltage
+    metadata:
+      displayName: UPS Input Min Line Voltage
+      description: The minimum utility line voltage in VAC over the previous 1 minute period.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.input.freq
+    metadata:
+      displayName: UPS Input Frequency
+      description: The current input frequency to the UPS system in Hz.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.input.fail-cause
+    metadata:
+      displayName: UPS Input Line Fail Cause
+      description: The reason for the occurrence of the last transfer to UPS battery power
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.input.phase
+    metadata:
+      displayName: UPS Input Phase
+      description: The current AC input phase.
+      unit: Unspecified       
+  - key: bt.extension.snmp-generic-apc-ups.output.voltage
+    metadata:
+      displayName: UPS Output Voltage
+      description: The output voltage of the UPS system in VAC.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.output.freq
+    metadata:
+      displayName: UPS Output Frequency
+      description: The current output frequency of the UPS system in Hz.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.output.load
+    metadata:
+      displayName: UPS Output Load
+      description: The current UPS load expressed in percent of rated capacity.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.output.current
+    metadata:
+      displayName: UPS Output Current
+      description: The current in ampres drawn by the load on the UPS
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.output.redundancy
+    metadata:
+      displayName: UPS Output Redundancy
+      description: The number of power modules which can fail or be removed without causing the UPS to generate a Minimum Redundancy Lost event.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.output.active-power
+    metadata:
+      displayName: UPS Output Active Power
+      description: The total output active power of the UPS system in W. The total active power is the sum of phase 1, phase 2 and phase 3 power.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.output.apparent-power
+    metadata:
+      displayName: UPS Output Apparent Power
+      description: The total output apparent power of all phases of the UPS system in VA.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.output.phase
+    metadata:
+      displayName: UPS Output Phase
+      description: The current AC output phase.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.info.battery-nominalVolt
+    metadata:
+      displayName: UPS INFO Battery Nominal Voltage
+      description: The nominal battery voltage in Volts.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.info.battery-fullcapacity
+    metadata:
+      displayName: UPS INFO Battery Full Capacity
+      description: The full chargeable capacity of the battery which is expressed in percentage.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.info.output-kva-capacity
+    metadata:
+      displayName: UPS INFO Output KVA Capacity
+      description: The maximum load that this UPS can support.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.info.output-freq
+    metadata:
+      displayName: UPS INFO Nominal Output Freq
+      description: The nominal output frequency of the UPS system in Hz.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.info.input-volt
+    metadata:
+      displayName: UPS INFO Nominal Input Voltage
+      description: The nominal input voltage of the UPS system in VAC.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.info.input-freq
+    metadata:
+      displayName: UPS INFO Nominal Input Freq
+      description: The nominal input frequency of the UPS system in Hz.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.status.output
+    metadata:
+      displayName: UPS Satus Output
+      description: The current state of the UPS. 
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.status.basic-system
+    metadata:
+      displayName: UPS Status Basic System Status
+      description: Current state for the whole system
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.status.temperature-internal
+    metadata:
+      displayName: UPS Status Basic Internal Temperature
+      description: The actual internal temperature of the UPS system in Celsius.
+      unit: Unspecified
+  - key: bt.extension.snmp-generic-apc-ups.status.snmp
+    metadata:
+      displayName: UPS Status Communication
+      description: The status of agent's communication with UPS.
+      unit: Unspecified     
+ 
+snmp:
+  - group: generic-device
+    interval:
+       minutes: 1
+    dimensions:
+      - key: sys.name
+        value: oid:1.3.6.1.2.1.1.5.0
+      - key: sys.contact
+        value: oid:1.3.6.1.2.1.1.4.0
+      - key: device.address
+        value: this:device.address
+      - key: activation.tag
+        value: var:ext.activationtag
+      - key: device.port
+        value: this:device.port
+
+    subgroups:
+      - subgroup: Device Info
+        table: false
+        dimensions:
+        - key: sys.description
+          value: oid:1.3.6.1.2.1.1.1.0
+        - key: sys.objectid
+          value: oid:1.3.6.1.2.1.1.2.0
+        - key: sys.location
+          value: oid:1.3.6.1.2.1.1.6.0
+        - key: sys.services
+          value: oid:1.3.6.1.2.1.1.7.0
+        - key: if.count
+          value: oid:1.3.6.1.2.1.2.1.0
+        metrics:
+        - key: bt.extension.snmp-generic-apc-ups.sys.uptime
+          value: oid:1.3.6.1.2.1.1.3.0
+      
+      - subgroup: Battery
+        featureSet: Battery
+        table: false
+        metrics:
+          - key: bt.extension.snmp-generic-apc-ups.battery.capacity
+            value: oid:1.3.6.1.4.1.318.1.1.1.2.2.1.0
+          - key: bt.extension.snmp-generic-apc-ups.battery.temperature
+            value: oid:1.3.6.1.4.1.318.1.1.1.2.2.2.0
+          - key: bt.extension.snmp-generic-apc-ups.battery.timeremaining
+            value: oid:1.3.6.1.4.1.318.1.1.1.2.2.3.0
+          - key: bt.extension.snmp-generic-apc-ups.battery.replaceindicator
+            value: oid:1.3.6.1.4.1.318.1.1.1.2.2.4.0
+          - key: bt.extension.snmp-generic-apc-ups.battery.numextbattpack
+            value: oid:1.3.6.1.4.1.318.1.1.1.2.2.5.0
+          - key: bt.extension.snmp-generic-apc-ups.battery.numextbattpackdefective
+            value: oid:1.3.6.1.4.1.318.1.1.1.2.2.6.0
+          - key: bt.extension.snmp-generic-apc-ups.battery.actualVolt
+            value: oid:1.3.6.1.4.1.318.1.1.1.2.2.8.0
+          - key: bt.extension.snmp-generic-apc-ups.battery.current
+            value: oid:1.3.6.1.4.1.318.1.1.1.2.2.9.0
+          - key: bt.extension.snmp-generic-apc-ups.battery.dccurrent
+            value: oid:1.3.6.1.4.1.318.1.1.1.2.2.10.0
+       
+      - subgroup: Input
+        featureSet: Input
+        table: false
+        metrics:
+          - key: bt.extension.snmp-generic-apc-ups.input.voltage
+            value: oid:1.3.6.1.4.1.318.1.1.1.3.2.1.0
+          - key: bt.extension.snmp-generic-apc-ups.input.max-voltage
+            value: oid:1.3.6.1.4.1.318.1.1.1.3.2.2.0
+          - key: bt.extension.snmp-generic-apc-ups.input.min-voltage
+            value: oid:1.3.6.1.4.1.318.1.1.1.3.2.3.0
+          - key: bt.extension.snmp-generic-apc-ups.input.freq
+            value: oid:1.3.6.1.4.1.318.1.1.1.3.2.4.0
+          - key: bt.extension.snmp-generic-apc-ups.input.fail-cause
+            value: oid:1.3.6.1.4.1.318.1.1.1.3.2.5.0
+          - key: bt.extension.snmp-generic-apc-ups.input.phase
+            value: oid:1.3.6.1.4.1.318.1.1.1.3.1.1.0
+            
+      - subgroup: Output
+        featureSet: Output
+        table: false
+        metrics:
+          - key: bt.extension.snmp-generic-apc-ups.output.voltage
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.2.1.0
+          - key: bt.extension.snmp-generic-apc-ups.output.freq
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.2.2.0
+          - key: bt.extension.snmp-generic-apc-ups.output.load
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.2.3.0
+          - key: bt.extension.snmp-generic-apc-ups.output.current
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.2.4.0
+          - key: bt.extension.snmp-generic-apc-ups.output.redundancy
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.2.5.0
+          - key: bt.extension.snmp-generic-apc-ups.output.active-power
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.2.8.0
+          - key: bt.extension.snmp-generic-apc-ups.output.apparent-power
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.2.9.0
+          - key: bt.extension.snmp-generic-apc-ups.output.phase
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.1.2.0
+            
+      - subgroup: Info Data
+        featureSet: Information
+        table: false
+        metrics:
+          - key: bt.extension.snmp-generic-apc-ups.info.output-kva-capacity
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.2.6.0
+          - key: bt.extension.snmp-generic-apc-ups.info.output-freq
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.2.7.0
+          - key: bt.extension.snmp-generic-apc-ups.info.input-freq
+            value: oid:1.3.6.1.4.1.318.1.1.1.3.2.6.0
+          - key: bt.extension.snmp-generic-apc-ups.info.input-volt
+            value: oid:1.3.6.1.4.1.318.1.1.1.3.2.7.0
+          - key: bt.extension.snmp-generic-apc-ups.info.battery-fullcapacity
+            value: oid:1.3.6.1.4.1.318.1.1.1.2.2.11.0
+          - key: bt.extension.snmp-generic-apc-ups.info.battery-nominalVolt
+            value: oid:1.3.6.1.4.1.318.1.1.1.2.2.7.0
+          
+      
+      - subgroup: Status Info
+        featureSet: Status
+        table: false
+        metrics:
+          - key: bt.extension.snmp-generic-apc-ups.status.output
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.1.1.0
+          - key: bt.extension.snmp-generic-apc-ups.status.basic-system
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.1.3.0
+          - key: bt.extension.snmp-generic-apc-ups.status.temperature-internal
+            value: oid:1.3.6.1.4.1.318.1.1.1.4.1.4.0
+          - key: bt.extension.snmp-generic-apc-ups.status.snmp
+            value: oid:1.3.6.1.4.1.318.1.1.1.8.1.0
+            
+      - subgroup: SNMP health
+        table: false
+        metrics:
+          - key: bt.extension.snmp-generic-apc-ups.snmp.in.pkts
+            value: oid:1.3.6.1.2.1.11.1.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.snmp.out.pkts
+            value: oid:1.3.6.1.2.1.11.2.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.snmp.silentdrops
+            value: oid:1.3.6.1.2.1.11.31.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.drops.proxy
+            value: oid:1.3.6.1.2.1.11.32.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.in.bad.versions
+            value: oid:1.3.6.1.2.1.11.3.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.in.bad.community.names
+            value: oid:1.3.6.1.2.1.11.4.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.in.bad.community.uses
+            value: oid:1.3.6.1.2.1.11.5.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.in.nosuchnames
+            value: oid:1.3.6.1.2.1.11.9.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.in.bad.values
+            value: oid:1.3.6.1.2.1.11.10.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.snmp.in.traps
+            value: oid:1.3.6.1.2.1.11.19.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.snmp.out.traps
+            value: oid:1.3.6.1.2.1.11.29.0
+            type: count
+          
+
+      - subgroup: NIC status
+        featureSet: Interfaces
+        table: true
+        dimensions:
+          - key: if.idx
+            value: oid:1.3.6.1.2.1.2.2.1.1
+          - key: if.descr
+            value: oid:1.3.6.1.2.1.2.2.1.2
+          - key: if.type
+            value: oid:1.3.6.1.2.1.2.2.1.3
+          - key: if.mtu  # Largest packet/datagram which can be sent/received on the interface
+            value: oid:1.3.6.1.2.1.2.2.1.4
+          - key: if.speed
+            value: oid:1.3.6.1.2.1.2.2.1.5
+          - key: if.highspeed
+            value: oid:1.3.6.1.2.1.31.1.1.1.15
+          - key: if.adminstatus  # The desired state of the interface - up(1) down(2) testing(3)
+            value: oid:1.3.6.1.2.1.2.2.1.7
+          - key: if.operstatus  # The current operational state of the interface - up(1) down(2) testing(3) unknown(4) dormant(5) notPresent(6) lowerLayerDown(7)
+            value: oid:1.3.6.1.2.1.2.2.1.8
+          - key: if.promiscuousmode  # True if this interface accepts all packets/frames false if only accepts packets/frames addressed to this station
+            value: oid:1.3.6.1.2.1.31.1.1.1.16   
+        metrics:
+          - key: bt.extension.snmp-generic-apc-ups.if.lastchange
+            value: oid:1.3.6.1.2.1.2.2.1.9
+            type: gauge
+          - key: bt.extension.snmp-generic-apc-ups.if.highspeed
+            #Interface highspeed - required as separate metric to compute interface bandwidth utilization
+            value: oid:1.3.6.1.2.1.31.1.1.1.15
+            type: gauge
+          - key: bt.extension.snmp-generic-apc-ups.if.in.octets
+            #The total number of octets received on the interface including framing characters.
+            value: oid:1.3.6.1.2.1.2.2.1.10
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.if.out.octets
+            #The total number of octets transmitted out of the interface including framing characters.
+            value: oid:1.3.6.1.2.1.2.2.1.16
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.if.in.errors
+            #The number of inbound packets/transmission units with errors
+            value: oid:1.3.6.1.2.1.2.2.1.14
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.if.in.discards
+            #The number of inbound packets discarded possibly due to full buffers
+            value: oid:1.3.6.1.2.1.2.2.1.13
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.if.out.errors
+            value: oid:1.3.6.1.2.1.2.2.1.20
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.if.out.discards
+            #The number of outbound packets discarded possibly due to full buffers
+            value: oid:1.3.6.1.2.1.2.2.1.19
+            type: count
+
+      - subgroup: Transport layer statistics
+        featureSet: Traffic
+        table: false
+        metrics:
+          - key: bt.extension.snmp-generic-apc-ups.tcp.activeopens
+            value: oid:1.3.6.1.2.1.6.5.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.tcp.passiveopens
+            value: oid:1.3.6.1.2.1.6.6.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.tcp.attemptfails
+            value: oid:1.3.6.1.2.1.6.7.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.tcp.estab.resets
+            value: oid:1.3.6.1.2.1.6.8.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.tcp.curr.estab
+            value: oid:1.3.6.1.2.1.6.9.0
+            type: gauge
+          - key: bt.extension.snmp-generic-apc-ups.tcp.hc.in.segs
+            value: oid:1.3.6.1.2.1.6.17.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.tcp.hc.out.segs
+            value: oid:1.3.6.1.2.1.6.18.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.tcp.retrans.segs
+            value: oid:1.3.6.1.2.1.6.12.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.tcp.in.errs
+            #The total number of segments received in error (e.g. bad TCP checksums)
+            value: oid:1.3.6.1.2.1.6.14.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.tcp.out.rsts
+            value: oid:1.3.6.1.2.1.6.15.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.udp.hc.in.datagrams
+            value: oid:1.3.6.1.2.1.7.8.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.udp.noports
+            value: oid:1.3.6.1.2.1.7.2.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.udp.in.errors
+            value: oid:1.3.6.1.2.1.7.3.0
+            type: count
+          - key: bt.extension.snmp-generic-apc-ups.udp.hc.out.datagrams
+            value: oid:1.3.6.1.2.1.7.9.0
+            type: count
+
+dashboards:
+  - path: "dashboards/ups-device-dashboard.json"
+  
+topology:
+  types:
+    - name: snmp:bt_extension_snmp_generic_apc_ups
+      displayName: Generic SNMP Device
+      enabled: true
+      rules:
+      - idPattern: snmp_generic_device_{device.address}
+        sources:
+        - sourceType: Metrics
+          condition: $prefix(bt.extension.snmp-generic-apc-ups)
+        attributes:
+        - pattern: '{sys.contact}'
+          key: system_contact
+          displayName: System Contact
+        - pattern: '{sys.name}'
+          key: system_name
+          displayName: Device Name
+        - pattern: '{device.address}'
+          key: dt.ip_addresses
+          displayName: Device Address
+        - pattern: '{sys.description}'
+          key: system_descr
+          displayName: Description
+        - pattern: '{sys.location}'
+          key: system_location
+          displayName: Location
+        - pattern: '{activation.tag}'
+          key: activation_tag
+          displayName: Tag
+        - pattern: '{device.port}'
+          key: dt.listen_ports
+          displayName: Port
+        - pattern: '{device.name}'
+          key: dt.dns_names
+          displayName: Device DNS Name
+        - pattern: '{if.count}'
+          key: interface_count
+          displayName: Network Interface Count
+        requiredDimensions: []
+        instanceNamePattern: Network device {sys.name} @ {device.address}:{device.port}
+
+    - name: snmp:bt_extension_snmp_generic_apc_ups_interface
+      displayName: Generic SNMP Device Network Interface
+      enabled: true
+      rules:
+      - idPattern: snmp_generic_device_if_{device.address}-{if.idx}
+        sources:
+        - sourceType: Metrics
+          condition: $prefix(bt.extension.snmp-generic-apc-ups.if)
+        attributes:
+        - pattern: '{device.address}'
+          key: dt.ip_addresses
+          displayName: Network device address
+        - pattern: '{if.promiscuousmode}'
+          key: promiscuousMode
+          displayName: PromiscuousMode
+        - pattern: '{if.speed}'
+          key: speed
+          displayName: Interface Speed
+        - pattern: '{if.highspeed}'
+          key: highspeed
+          displayName: Interface Speed (Mbps)
+        - pattern: '{if.type}'
+          key: type
+          displayName: Interface Type
+        - pattern: '{if.operstatus}'
+          key: opStatus
+          displayName: Operational Status
+        - pattern: '{if.mtu}'
+          key: mtu
+          displayName: MTU
+        - pattern: '{if.descr}'
+          key: description
+          displayName: Description
+        - pattern: '{if.adminstatus}'
+          key: adminStatus
+          displayName: Admin Status
+        requiredDimensions: []
+        instanceNamePattern: Network interface {if.descr} @ {device.address}
+
+  relationships:
+    - typeOfRelation: CHILD_OF
+      fromType: snmp:bt_extension_snmp_generic_apc_ups_interface
+      toType: snmp:bt_extension_snmp_generic_apc_ups
+      enabled: true
+      sources:
+      - sourceType: Metrics
+        condition: $prefix(bt.extension.snmp-generic-apc-ups)
+
+screens:
+  - entityType: snmp:bt_extension_snmp_generic_apc_ups
+    propertiesCard:
+      properties:
+        - type: ATTRIBUTE
+          attribute:
+            key: system_name
+            displayName: Name
+        - type: ATTRIBUTE
+          attribute:
+            key: activation_tag
+            displayName: Tag
+        - type: ATTRIBUTE
+          attribute:
+            key: dt.listen_ports
+            displayName: Port
+        - type: ATTRIBUTE #hide this one as we already display name
+          attribute:
+            key: dt.dns_names
+            displayName: DNS name
+            hidden: true
+    detailsSettings:
+      staticContent:
+        breadcrumbs:
+          - entityType: snmp:bt_extension_snmp_generic_apc_ups
+            type: ENTITY_LIST_REF
+        showProblems: true
+        showProperties: true
+        showAddTag: true
+        showTags: true
+        showGlobalFilter: false
+      layout:
+        autoGenerate: false
+        cards:
+          - type: "CHART_GROUP"
+            key: "battery_stats"
+          - type: "CHART_GROUP"
+            key: "io_stats"
+          - type: "CHART_GROUP"
+            key: "network_stats"
+          - type: "CHART_GROUP"
+            key: "snmp_health"
+          - type: "ENTITIES_LIST"
+            key: "network_interfaces"
+    chartsCards:
+      - key: "battery_stats"
+        displayName: "Battery Statistics"
+        numberOfVisibleCharts: 2
+        charts:
+          - displayName: "Capacity"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.battery.capacity"
+          - displayName: "Current"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.battery.current"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.battery.dccurrent"
+          - displayName: "Voltage"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.battery.actualVolt"
+          - displayName: "Temperature"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.battery.temperature"
+      - key: "io_stats"
+        displayName: "Input-Output"
+        numberOfVisibleCharts: 8
+        charts:
+          - displayName: "input Voltage"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.input.voltage"
+          - displayName: "Output Voltage"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.output.voltage"
+          - displayName: "input Freq"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.input.freq"
+          - displayName: "Output Freq"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.output.freq"
+          - displayName: "input Phase"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.input.phase"
+          - displayName: "Output Phase"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.output.phase"
+          - displayName: "All Input"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.input.volt"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.input.freq"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.input.phase"
+          - displayName: "All Output"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.output.volt"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.output.freq"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.output.phase"
+          - displayName: "IO Voltage"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.input.volt"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.output.volt"
+          - displayName: "IO Freq"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.input.freq"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.output.freq"
+      - key: "snmp_health"
+        displayName: "SNMP Statistics"
+        numberOfVisibleCharts: 4
+        charts:
+          - displayName: "Request Problems"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: AREA
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.snmp.silentdrops.count"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.in.bad.versions.count"
+          - displayName: "SNMP Messages"
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.snmp.in.pkts.count"
+          - displayName: "PDU Problems"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: COLUMN
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.in.bad.values.count"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.in.nosuchnames.count"
+          - displayName: "Community Problems"
+            visualization:
+              themeColor: DEFAULT
+              seriesType: AREA
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.in.bad.community.uses.count"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.in.bad.community.names.count"
+      - key: "network_stats"
+        displayName: "Network Statistics"
+        numberOfVisibleCharts: 8
+        charts:
+          - displayName: "Network Interfaces Traffic"
+            visualization:  
+              themeColor: ROYALBLUE
+              seriesType: LINE
+            metrics:
+                - metricSelector: "func:bt.extension.snmp-generic-apc-ups.if.out.octets.bitpersec:splitBy()"
+                - metricSelector: "func:bt.extension.snmp-generic-apc-ups.if.in.octets.bitpersec:splitBy()"
+          - displayName: "Bandwidth Utilization In & Out"
+            visualization:
+              themeColor: ROYALBLUE
+              seriesType: LINE
+            metrics:
+              - metricSelector: "func:bt.extension.snmp-generic-apc-ups.if.in.bandwidth:splitBy()"
+              - metricSelector: "func:bt.extension.snmp-generic-apc-ups.if.out.bandwidth:splitBy()"
+          - displayName: "Retransmited & Resets"
+            visualization:
+              themeColor: PURPLE
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.tcp.retrans.segs.count"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.tcp.out.rsts.count"
+          - displayName: "Errors"
+            visualization:
+              themeColor: PURPLE
+              seriesType: COLUMN
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.tcp.in.errs.count"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.udp.in.errors.count"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.udp.noports.count"
+          - displayName: "TCP traffic"
+            visualization:
+              themeColor: ROYALBLUE
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.tcp.hc.in.segs.count"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.tcp.hc.out.segs.count"
+          - displayName: "UDP Traffic"
+            visualization:
+              themeColor: ROYALBLUE
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.udp.hc.in.datagrams.count"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.udp.hc.out.datagrams.count"
+          - displayName: "Estabilished Connections"
+            visualization:
+              themeColor: ROYALBLUE
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.tcp.curr.estab"
+          - displayName: "Transitions Open"
+            visualization:
+              themeColor: ROYALBLUE
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.tcp.activeopens.count"
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.tcp.passiveopens.count"
+          - displayName: "Transitions Closed"
+            visualization:
+              themeColor: PURPLE
+              seriesType: LINE
+            metrics:
+              - metricSelector: "bt.extension.snmp-generic-apc-ups.tcp.estab.resets.count"
+          - displayName: "Overall TCP & UDP Traffic"
+            visualization:
+              themeColor: ROYALBLUE
+              seriesType: LINE
+            metrics:
+              - metricSelector: "func:bt.extension.snmp-generic-apc-ups.totaltraffic"
+          - displayName: "Overall TCP Traffic"
+            visualization:
+              themeColor: ROYALBLUE
+              seriesType: LINE
+            metrics:
+              - metricSelector: "func:bt.extension.snmp-generic-apc-ups.tcp.hc.total"
+          - displayName: "Overall UDP Traffic"
+            visualization:
+              themeColor: ROYALBLUE
+              seriesType: LINE
+            metrics:
+              - metricSelector: "func:bt.extension.snmp-generic-apc-ups.udp.hc.total"
+          - displayName: "Interfaces overall Bandwidth Utilization"
+            visualization:
+              themeColor: ROYALBLUE
+              seriesType: LINE
+            metrics:
+              - metricSelector: "func:bt.extension.snmp-generic-apc-ups.if.bandwidth:splitBy()"
+          
+    entitiesListCards:
+      - key: "network_interfaces"
+        displayName: "Network Interfaces"
+        entitySelectorTemplate: "type(snmp:bt_extension_snmp_generic_apc_ups_interface), fromRelationships.isChildOf($(entityConditions))"
+        pageSize: 10
+        displayCharts: true
+        enableDetailsExpandability: true
+        numberOfVisibleCharts: 2
+        charts: 
+        - displayName: "Traffic"
+          metrics: 
+          - metricSelector: "func:bt.extension.snmp-generic-apc-ups.if.in.octets.bitpersec"
+          - metricSelector: "func:bt.extension.snmp-generic-apc-ups.if.out.octets.bitpersec"
+        - displayName: "Bandwidth"
+          metrics: 
+          - metricSelector: "func:bt.extension.snmp-generic-apc-ups.if.in.bandwidth"
+          - metricSelector: "func:bt.extension.snmp-generic-apc-ups.if.out.bandwidth"
+        displayIcons: true
+        columns: 
+        - type: ATTRIBUTE
+          attribute: 
+            key: "highspeed"
+            displayName: "IF speed (Mbps)"
+        - type: ATTRIBUTE
+          attribute: 
+            key: "type"
+            displayName: "IF type"
+        - type: ATTRIBUTE
+          attribute: 
+            key: "opStatus"
+            displayName: "Operational status"
+        filtering:
+          relationships:
+          - type(snmp:bt_extension_snmp_generic_apc_ups), toRelationships.isChildOf($(entityConditions))
+          entityFilters:
+          - displayName: Filters
+            filters:
+            - type: entityName
+              entityTypes:
+              - snmp:bt_extension_snmp_generic_apc_ups_interface
+              displayName: Name
+              freeText: true
+              modifier: contains
+              defaultSearch: true
+              distinct: true
+            - type: opStatus
+              entityTypes:
+              - snmp:bt_extension_snmp_generic_apc_ups_interface
+              displayName: Operational status
+              freeText: true
+              modifier: contains
+              defaultSearch: false
+              distinct: true
+
+  - entityType: snmp:bt_extension_snmp_generic_apc_ups_interface
+    detailsSettings:
+      layout:
+        autoGenerate: false
+        cards:
+        - key: traffic
+          type: CHART_GROUP
+        - key: other
+          type: CHART_GROUP
+      staticContent:
+        breadcrumbs:
+        - entityType: snmp:bt_extension_snmp_generic_apc_ups
+          type: ENTITY_LIST_REF
+        - entitySelectorTemplate: type(snmp:bt_extension_snmp_generic_apc_ups),toRelationships.isChildOf($(entityConditions))
+          type: ENTITY_REF
+        showAddTag: true
+        showGlobalFilter: false
+        showProblems: true
+        showProperties: true
+        showTags: true
+    chartsCards:
+      - key: traffic
+        displayName: Interface traffic
+        numberOfVisibleCharts: 2
+        charts:
+          - displayName: Traffic
+            metrics:
+            - metricSelector: func:bt.extension.snmp-generic-apc-ups.if.out.octets.bitpersec
+            - metricSelector: func:bt.extension.snmp-generic-apc-ups.if.in.octets.bitpersec       
+          - displayName: Bandwidth utilization
+            metrics:
+            - metricSelector: func:bt.extension.snmp-generic-apc-ups.if.out.bandwidth
+            - metricSelector: func:bt.extension.snmp-generic-apc-ups.if.in.bandwidth
+      - key: other
+        displayName: Errors and discards  
+        numberOfVisibleCharts: 2  
+        charts:
+          - displayName: Errors
+            metrics:
+            - metricSelector: bt.extension.snmp-generic-apc-ups.if.out.errors.count
+            - metricSelector: bt.extension.snmp-generic-apc-ups.if.in.errors.count
+          - displayName: Discards
+            metrics:
+            - metricSelector: bt.extension.snmp-generic-apc-ups.if.out.discards.count
+            - metricSelector: bt.extension.snmp-generic-apc-ups.if.in.discards.count        
+    propertiesCard:
+      displayOnlyConfigured: false
+      properties:
+      - type: RELATION
+        relation:
+          displayName: Device
+          entitySelectorTemplate: type(snmp:bt_extension_snmp_generic_apc_ups),toRelationships.isChildOf($(entityConditions))
+      - type: ATTRIBUTE
+        attribute:
+          key: speed
+          displayName: Speed
+          hidden: true
+      - type: ATTRIBUTE
+        attribute: 
+          key: highspeed
+          displayName: Speed (Mbps)
+          unit: MegaBitPerSecond  
