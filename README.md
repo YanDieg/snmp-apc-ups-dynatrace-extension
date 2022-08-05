@@ -1,5 +1,5 @@
 # Dynatrace Extension 2.0 to monitor APC UPS devices using SNMP protocol
-##⚠️ NOT MAINTAINED ⚠️
+## ⚠️ NOT MAINTAINED ⚠️
 
 ### Extension Framework 2.0
 
